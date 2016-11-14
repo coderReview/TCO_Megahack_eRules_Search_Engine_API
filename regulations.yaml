@@ -1,0 +1,277 @@
+swagger: '2.0'
+info:
+  version: "0.1.0"
+  title: Regulations API
+  description: Topcoder Megahack Regulations API.
+host: localhost:8080
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+# will be prefixed to all paths
+basePath: /api/v1
+produces:
+  - application/json
+# Describe your paths here
+paths:
+  # Search documents
+  /search:
+    # This is a HTTP operation
+    get:
+      description: |
+        Retrieve open Regulations for EPA agency
+      security:
+        - Bearer: []
+      parameters:
+        -
+          name: naics
+          in: query
+          description: North American Industry Classification System
+          required: false
+          type: number
+          format: int
+        -
+          name: zip
+          in: query
+          description: Zip code used in search
+          required: false
+          type: string
+        -
+          name: program
+          in: query
+          description: Rule associated program name
+          required: false
+          type: string
+        -
+          name: cache
+          in: query
+          description: Flag indicating to use memory cache or not
+          required: false
+          type: boolean
+      # Expected responses for this operation:
+      responses:
+        '200':
+          description: No response was specified
+          schema: 
+            type: array
+            items:
+              $ref: '#/definitions/Document'
+        '400':
+          description: Bad request. The document is only available for comment via Regulations.gov.
+        '404':
+          description: File not found.
+  /detail:
+    get:
+      description: |
+        Retrieve regulation details
+      security:
+        - Bearer: []
+      parameters:
+        -
+          name: documentId
+          in: query
+          description: The document ID
+          required: true
+          type: number
+          format: string
+      # Expected responses for this operation:
+      responses:
+        '200':
+          description: Document detail
+          schema: 
+            $ref: '#/definitions/DocumentDetail'
+        '400':
+          description: Bad request. The document is only available for comment via Regulations.gov.
+        '404':
+          description: File not found.
+  # Lookups
+  /lookups/naics:
+    get:
+      description: Retrieve North American Industry Classification System
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: NAICS objects
+          schema: 
+            type: array
+            items:
+              $ref: '#/definitions/Naics'
+  /lookups/substances:
+    get:
+      description: Retrieve substances
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: Substance objects
+          schema: 
+            type: array
+            items:
+              $ref: '#/definitions/Substances'
+definitions:
+  Document:
+    properties:
+      agencyAcronym:
+        type: string
+      allowLateComment:
+        type: boolean
+      attachmentCount:
+        type: integer
+        format: int64
+      commentDueDate:
+        type: string
+      commentStartDate:
+        type: string
+      docketId:
+        type: string
+      docketTitle:
+        type: string
+      docketType:
+        type: string
+      documentId:
+        type: string
+      documentStatus:
+        type: string
+      documentType:
+        type: string
+      frNumber:
+        type: string
+      numberOfCommentsReceived:
+        type: integer
+        format: int64
+      openForComment:
+        type: boolean
+      postedDate:
+        type: string
+      title:
+        type: string
+      isCleanAct:
+        type: boolean
+  DocumentDetail:
+    properties:
+      allowLateComment:
+        type: boolean
+      commentDueDate:
+        type: string
+      commentStartDate:
+        type: string
+      fileFormats:
+        type: array
+        items:
+          type: string
+      openForComment:
+        type: boolean
+      postedDate:
+        type: string
+      receivedDate:
+        type: string
+      status:
+        type: string
+      topics:
+        type: array
+        items:
+          type: string
+      summary:
+        type: string
+      dates:
+        type: string
+      addresses:
+        type: string
+      contact:
+        type: string
+      supInfo:
+        type: string
+      facilities:
+        type: array
+        items:
+          $ref: '#/definitions/Facility'
+      programs:
+        type: array
+        items:
+          $ref: '#/definitions/Program'
+      naics:
+        type: array
+        items:
+          $ref: '#/definitions/Naics'
+      docketTitle:
+        $ref: '#/definitions/DefaultObject'
+      pageCount:
+        $ref: '#/definitions/DefaultObject'
+      documentType:
+        $ref: '#/definitions/DefaultObject'
+      docketType:
+        $ref: '#/definitions/DefaultObject'
+      subject:
+        $ref: '#/definitions/DefaultObject'
+      federalRegisterNumber:
+        $ref: '#/definitions/DefaultObject'
+      attachmentCount:
+        $ref: '#/definitions/DefaultObject'
+      agencyName:
+        $ref: '#/definitions/DefaultObject'
+      title:
+        $ref: '#/definitions/DefaultObject'
+      startEndPage:
+        $ref: '#/definitions/DefaultObject'
+      docketId:
+        $ref: '#/definitions/DefaultObject'
+      documentId:
+        $ref: '#/definitions/DefaultObject'
+      numItemsRecieved:
+        $ref: '#/definitions/DefaultObject'
+      cfrPart:
+        $ref: '#/definitions/DefaultObject'
+      agencyAcronym:
+        $ref: '#/definitions/DefaultObject'
+  Naics:
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  Substances:
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  Facility:
+    properties:
+      facilityId:
+        type: integer
+        format: int64
+      description:
+        type: string
+      name:
+        type: string
+      latitude:
+        type: number
+        format: double
+      longitude:
+        type: number
+        format: double
+  Program:
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+  DefaultObject:
+    required:
+      - label
+      - value
+    properties:
+      label:
+        type: string
+      value:
+        type: string
