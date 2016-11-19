@@ -38,6 +38,12 @@ paths:
           required: false
           type: string
         -
+          name: substance
+          in: query
+          description: Substance name
+          required: false
+          type: string
+        -
           name: program
           in: query
           description: Rule associated program name
