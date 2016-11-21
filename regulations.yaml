@@ -38,6 +38,24 @@ paths:
           required: false
           type: string
         -
+          name: state
+          in: query
+          description: State name used in search
+          required: false
+          type: string
+        -
+          name: city
+          in: query
+          description: City name used in search
+          required: false
+          type: string
+        -
+          name: street
+          in: query
+          description: Street name used in search
+          required: false
+          type: string
+        -
           name: substance
           in: query
           description: Substance name
@@ -59,7 +77,7 @@ paths:
       responses:
         '200':
           description: No response was specified
-          schema: 
+          schema:
             type: array
             items:
               $ref: '#/definitions/Document'
@@ -81,11 +99,41 @@ paths:
           required: true
           type: number
           format: string
+        -
+          name: zip
+          in: query
+          description: Zip code used in search
+          required: false
+          type: string
+        -
+          name: stateAbbr
+          in: query
+          description: State abbreviation used in search
+          required: false
+          type: string
+        -
+          name: city
+          in: query
+          description: City name used in search
+          required: false
+          type: string
+        -
+          name: street
+          in: query
+          description: Street name used in search
+          required: false
+          type: string
+        -
+          name: program
+          in: query
+          description: Rule associated program name
+          required: false
+          type: string
       # Expected responses for this operation:
       responses:
         '200':
           description: Document detail
-          schema: 
+          schema:
             $ref: '#/definitions/DocumentDetail'
         '400':
           description: Bad request. The document is only available for comment via Regulations.gov.
@@ -100,7 +148,7 @@ paths:
       responses:
         '200':
           description: NAICS objects
-          schema: 
+          schema:
             type: array
             items:
               $ref: '#/definitions/Naics'
@@ -112,7 +160,7 @@ paths:
       responses:
         '200':
           description: Substance objects
-          schema: 
+          schema:
             type: array
             items:
               $ref: '#/definitions/Substances'
